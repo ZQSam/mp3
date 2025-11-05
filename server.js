@@ -1,6 +1,6 @@
 // Get the packages we need
 var express = require('express'),
-    router = express.Router(),
+    // router = express.Router(),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser');
 
@@ -15,7 +15,12 @@ var port = process.env.PORT || 3000;
 
 // Connect to a MongoDB --> Uncomment this once you have a connection string!!
 // want to show some log when connecting
-mongoose.connect(process.env.MONGODB_URI, { dbName: 'mp3' })
+mongoose.connect(process.env.MONGODB_URI, {
+    dbName: 'mp3',
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    writeConcern: { w: 'majority' }
+  })
   .then(() => console.log('✅ MongoDB connected!'))
   .catch(err => console.error('❌ MongoDB connection failed:', err.message));
 
@@ -35,7 +40,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // Use routes as a module (see index.js)
-require('./routes')(app, router);
+require('./routes')(app);
 
 // Start the server
 app.listen(port);
